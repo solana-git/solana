@@ -1,1 +1,37 @@
-
+import { Connection } from "@solana/web3.js";
+import { initializeKeypair } from "@solana-developers/helpers";
+import { uploadOffChainMetadata } from "./helpers";
+import dotenv from "dotenv";
+dotenv.config();
+ 
+const connection = new Connection(clusterApiUrl("devnet"), "finalized");
+const payer = await initializeKeypair(connection, {
+  keypairPath: "your/path/to/keypair.json",
+});
+ 
+const imagePath = "src/solanadog.png";
+const metadataPath = "src/temp.json";
+const tokenName = "Dog Token";
+const tokenDescription = "This is a dog token";
+const tokenSymbol = "SOLDOG";
+const tokenExternalUrl = "https://solana.com/";
+const tokenAdditionalMetadata = {
+  species: "Dog",
+  breed: "Cool",
+};
+ 
+const tokenUri = await uploadOffChainMetadata(
+  {
+    tokenName,
+    tokenDescription,
+    tokenSymbol,
+    imagePath,
+    metadataPath,
+    tokenExternalUrl,
+    tokenAdditionalMetadata,
+  },
+  payer,
+);
+ 
+// You can log the URI here and run the code to test it
+console.log("Token URI:", tokenUri);
